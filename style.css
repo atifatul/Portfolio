@@ -143,3 +143,97 @@ main h1{
     }
     
 }
+
+/* 3D planet */
+
+.planet-3d{
+    position: absolute;
+    top: -20%;
+    right:-14%;
+    width: 130%;
+
+}
+
+/* About section */
+
+.about-section{
+     width: 100%;
+     margin-top: 20rem;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+}
+
+.about-title{
+    margin-bottom: 5%;
+    font-size: 5rem;
+    background-image: linear-gradient(rgb(133,133,133),rgb(255,255,255));
+    color: transparent;
+    background-clip: text;
+}
+
+.bento-grid{
+    position: relative;
+    display: grid;
+    height: 90vh;
+    width: 90%;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-areas:
+    "intro intro tech"
+    "time passion tech" ;
+    gap: 1.5rem;
+}
+
+.card{
+    background: linear-gradient(145deg,rgba(0,0,0,014), rgba(0,0,0,0.7));
+    border:1px solid rgba(255,255,255,0.1);
+    padding: 2rem;
+    transition: transform 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease ;
+    position: relative;
+    overflow: hidden; 
+}
+
+/* CARD SPECIFIC AREAS */
+
+.intro{
+    grid-area: intro ;
+    min-height: 300px;
+}
+.tech{
+    grid-area: tech ;
+    min-height: 450px;
+}
+.time{
+    grid-area: time ;
+    min-height: 220px;
+}
+.passion{
+    grid-area: passion ;
+    min-height: 220px;
+}
+
+/* HOVER EFFECTS */
+.card:hover{
+    border-color: transparent;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateY(-5px);
+}
+
+/* SPOTLIGHT EFFECT */
+
+.card::before{
+      content: "";
+      position: absolute;
+      inset: 0 0 0 0;
+      background: radial-gradient(circle at var(--x) var(--y),rgba(124,233,230,0.1),transparent 40%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+}
+
+.card:hover::before{
+    opacity: 1 ;
+}
