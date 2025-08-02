@@ -6,6 +6,7 @@
 
     <title>Atif Portfolio</title>
     <link rel="stylesheet" href="./style.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   </head>
   <body>
     <header>
@@ -43,12 +44,75 @@
     <section class="about-section">
       <h1 class="about-title">About Me </h1>
       <div class="bento-grid">
-        <div class="card intro"></div>
-        <div class="card tech"></div>
-        <div class="card time"></div>
-        <div class="card passion"><div>
+        <div class="card intro">
+          <h2 class="card-title">HI THERE, I'M MD ATIF REYYANI</h2> 
+          <p class="card-text">A passionate  Web Developer and Problem Solver with a strong grasp of HTML, CSS, JavaScript,  and C++. I love building user-centric and responsive web interfaces and tackling DSA challenges on platforms like LeetCode and GFG . I focus on building modern web interfaces that are not only aesthetically appealing but also optimized for performance and accessibility.</p>
+          <img src="./assets/gradient1.png" alt="" class="background-img">
+
+          <div class="model-box">
+            <spline-viewer class="info-3d" url="https://prod.spline.design/WyifwkAT6YSJdJOE/scene.splinecode"></spline-viewer>
+            
+          </div>
+
+        </div>
+        <div class="card tech">
+          <h2 class="card-title"> TECH STACK</h2>
+          <p class="card-text">
+            I specialize in a diverse range of programming languages, framework, and development tools that empower me to build robust, scalable, and high-performing applications. With a strong command of HTML, CSS and JavaScript, I create visually appealing and responsive web interfaces that enhances user engagement. My expertise extends to modern frameworks like React, Tailwind CSS, and Spline, enabling me to develop interactive, efficient, and maintainable front-end architectures.
+          </p>
+
+          <img src="./assets/gradient 2.png" alt="" class="background-img">
+
+          <img src="./assets/skills group.png" alt="" class="skills-group">
+        </div>
+
+
+        <div class="card time">
+          <h2 class="card-title">VERY FLEXIBLE WITH TIME ZONE, COMMUNICATION & LOCATIONS</h2>
+          <p class="card-text">Based in New Delhi, India and Open to work.</p>
+          <img src="./assets/gradient3&4.png" alt="" class="background-img">
+          <button class="btn"><i class='bx bx-send'></i> CONTACT ME</button>
+        </div>
+
+
+        <div class="card passion">
+          <h2 class="card-title">PASSION FOR CODING</h2>
+          <p class="card-text">
+            Solving problems and building solutions through code. Programming is my Addiction, it's my passion. I enjoy exploring new technologies and enhancing my skills.
+          </p>
+
+          <img src="./assets/gradient3&4.png" alt="" class="backgroung-img">
+
+         <div>
+
+
+
+
       </div>
 
+    </section>
+
+    <section class="project-section">
+      <h3>My Projects</h3>
+
+      <div  class="slider" style="
+        --width: 60rem
+        --height: 40rem
+        --quantity: 4"> 
+ <!-- yeh quantity show kr rha hai kitne items hoge projects mein  -->
+        <div class="list">
+          <div class="item" style="--position: 1"><video id="projectVideo1" playsinline src=""></video></div>
+
+          <div class="item" style="--position: 1"><video id="projectVideo2"loop playsinline src=""></video></div>
+
+          <div class="item" style="--position: 1"><video id="projectVideo3"loop playsinline src=""></video></div>
+
+          <div class="item" style="--position: 1"><video id="projectVideo4"loop playsinline src=""></video></div>
+        </div>
+
+
+
+       </div>
 
 
     </section>
@@ -58,6 +122,9 @@
         type="module"
         src="https://unpkg.com/@splinetool/viewer@1.10.38/build/spline-viewer.js"
       ></script>
+
+      <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.39/build/spline-viewer.js"></script>
+
 
       <script src="./app.js"></script>
   </body>
