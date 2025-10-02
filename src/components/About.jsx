@@ -1,5 +1,5 @@
 import React from "react";
-import PassportPhoto from "../assets/Passport_Photo Atif.jpeg";
+import PassportPhoto from "../assets/Atif reyyani .png";
 const About = () => {
   return (
     <section id="about" className="bg-[#111111] text-white py-20">
@@ -11,27 +11,27 @@ const About = () => {
           {/* About Image Placeholder */}
           <div className="w-full max-w-sm mx-auto">
             {/* Hum yahan baad mein image daal sakte hain. Abhi ke liye ek placeholder hai. */}
-            <div className="bg-gray-700 rounded-[50%] w-full h-80 flex items-center justify-center">
+            <div className="bg-gray-700 rounded-full w-full h-80 flex items-center justify-center overflow-hidden">
               {/* <span className="text-gray-400">
                 <img src="" alt="Passport Photo" />
               </span> */}
               <img
                 src={PassportPhoto}
                 alt="Passport"
-                className="object-cover rounded-[50%] w-full h-full"
+                className="object-fit object-top-right rounded-full w-full h-full"
               />
             </div>
           </div>
 
           {/* About Text Content */}
           <div>
-            <h3 className="text-3xl font-semibold mb-4 underline">A bit about me :</h3>
-            <p className="text-gray-300 mb-4 text-2xl">
+            <h3 className="text-2xl font-semibold mb-4 underline">A bit about me :</h3>
+            <p className="text-gray-300 mb-4 text-xl">
               I am a passionate full-stack developer with experience in building
               modern, responsive, and scalable web applications. I love solving
               complex problems and turning ideas into reality.
             </p>
-            <p className="text-gray-300 mb-6 text-2xl">
+            <p className="text-gray-300 mb-6 text-xl">
               My expertise lies in the MERN stack (MongoDB, Express.js,
               React.js, Node.js) and deploying applications using Netlify and
               Vercel.

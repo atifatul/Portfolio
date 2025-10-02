@@ -8,9 +8,8 @@ const skills = [
     icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-plain-wordmark.svg",
   },
   {
-    name:"CSS3",
-    icon:  "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-plain-wordmark.svg" 
-          
+    name: "CSS3",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-plain-wordmark.svg",
   },
   {
     name: "JavaScript",
@@ -34,10 +33,7 @@ const skills = [
   },
   {
     name: "Tailwind CSS",
-    icon: 
-            "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg"
-          
-          
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
   },
 ];
 
