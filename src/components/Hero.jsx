@@ -29,7 +29,7 @@ const Hero = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 2 }}
+          transition={{ duration: 0.6, delay: 1.5 }}
           viewport={{ once: true }}
           className="flex justify-center space-x-4"
         >
