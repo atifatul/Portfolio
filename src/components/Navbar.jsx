@@ -25,11 +25,10 @@ const Navbar = () => {
           <a href="#project" className="hover:text-gray-400">
             Project
           </a>
-          {/* Testimonials link can be added here if you create the section */}
           <a href="#contact" className="hover:text-gray-400">
             Contact
           </a>
-        </div>
+        </div> 
 
         {/* Hamburger Menu Button (visible on mobile) */}
         <div className="md:hidden">

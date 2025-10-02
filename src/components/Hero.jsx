@@ -14,7 +14,7 @@ const Hero = () => {
           <a href="#contact" className="bg-white text-black font-semibold px-6 py-3 rounded">
             Get In Touch
           </a>
-          <a href="#" className="border border-white text-white font-semibold px-6 py-3 rounded">
+          <a href="#project" className="border border-white text-white font-semibold px-6 py-3 rounded">
             Browse Projects
           </a>
         </div>
