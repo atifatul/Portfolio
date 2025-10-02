@@ -14,7 +14,7 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex justify-between items-center relative">
         <div className="text-2xl font-bold">
-          <a href="#">Md Atif Reyyani</a>
+          <a href="#">&lt;Md Atif Reyyani/&gt;</a>
         </div>
 
         {/* Desktop Menu (hidden on mobile) */}
