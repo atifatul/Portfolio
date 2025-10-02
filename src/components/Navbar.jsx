@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import { motion } from "motion/react";
 
 const Navbar = () => {
   // State to manage whether the mobile menu is open or closed
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-[#111111] text-white p-4 sm:p-6 fixed w-full top-0 z-20">
+    <motion.nav
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="bg-[#111111] text-white p-4 sm:p-6 fixed w-full top-0 z-20"
+    >
       <div className="container mx-auto flex justify-between items-center relative">
         <div className="text-2xl font-bold">
           <a href="#">Md Atif Reyyani</a>
@@ -28,7 +34,7 @@ const Navbar = () => {
           <a href="#contact" className="hover:text-gray-400">
             Contact
           </a>
-        </div> 
+        </div>
 
         {/* Hamburger Menu Button (visible on mobile) */}
         <div className="md:hidden">
@@ -118,7 +124,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import Bookstore from "../assets/Bookstore Web.png";
 import Agency from "../assets/Agency.ai.png";
 import Spotify from "../assets/Spotify.png";
+import { motion } from "motion/react";
 
 // Aap yahan apne projects ki details daal sakte ho
 const projects = [
@@ -33,16 +34,36 @@ const projects = [
 
 const Projects = () => {
   return (
-    <section id="project" className="bg-[#191919] text-white py-20">
+    <section id="project" className="bg-[#111111] text-white py-20">
       <div className="container mx-auto px-6 md:px-12 lg:px-20">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold">My Work</h2>
-          <p className="text-gray-400 mt-2">Some of the projects I've built</p>
+          <motion.h2
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="text-4xl font-bold"
+          >
+            My Work
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1 }}
+            viewport={{ once: true }}
+            className="text-gray-400 mt-2"
+          >
+            Some of the projects I've built
+          </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-32">
           {projects.map((project, index) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+              viewport={{ once: true }}
               key={index}
               className="bg-[#111111] rounded-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-2"
             >
@@ -73,7 +94,7 @@ const Projects = () => {
                   View Project →
                 </a>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
