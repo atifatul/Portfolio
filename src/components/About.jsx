@@ -22,6 +22,7 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
             className="w-full max-w-sm mx-auto"
+            style={{ opacity: "1", transform: "none", width: "47%" }}
           >
             <div className="bg-gray-700 rounded-full w-full h-80 flex items-center justify-center overflow-hidden">
               <img
