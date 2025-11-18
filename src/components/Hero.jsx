@@ -1,11 +1,15 @@
 import React from "react";
 import { motion } from "motion/react";
+// import ParticlesBackground from "./lightswind/particles-background";
 const Hero = () => {
   return (
     <section
       id="home"
       className="bg-[#111111] text-white h-screen flex flex-col justify-center items-center text-center pt-20"
     >
+      {/* <ParticlesBackground /> */}
+      
+
       <div className="container mx-auto px-4">
         <motion.h1
           initial={{ opacity: 0, y: 40 }}

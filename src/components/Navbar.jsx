@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
+import ParticlesBackground from "./lightswind/particles-background";
 
 const Navbar = () => {
   // State to manage whether the mobile menu is open or closed
@@ -13,6 +14,7 @@ const Navbar = () => {
       className="bg-[#111111] text-white p-4 sm:p-6 fixed w-full top-0 z-20"
     >
       <div className="container mx-auto flex justify-between items-center relative">
+        <ParticlesBackground/>
         <div className="text-2xl font-bold">
           <a href="#">&lt;Md Atif Reyyani/&gt;</a>
         </div>
