@@ -1,7 +1,9 @@
 import { motion } from "motion/react";
 import { FiArrowRight, FiDownload, FiMapPin } from "react-icons/fi";
-import { profile, links } from "../data";
-import { BrandIcon } from "./ui";
+import { profile, links, buildWords } from "../data";
+import { BrandIcon, Magnetic } from "./ui";
+import NeuralBg from "./NeuralBg";
+import Scramble from "./Scramble";
 import { ease } from "./ease";
 import CodeCard from "./CodeCard";
 
@@ -16,7 +18,7 @@ const Hero = () => {
 
   return (
     <section id="top" className="relative overflow-hidden">
-      <div className="dot-grid pointer-events-none absolute inset-0" aria-hidden />
+      <NeuralBg />
       <div className="blob -left-48 -top-48 bg-accent/20" aria-hidden />
       <div className="blob -right-48 top-48 bg-accent-2/15 [animation-delay:-9s]" aria-hidden />
 
@@ -49,21 +51,28 @@ const Hero = () => {
           </h1>
 
           <motion.p {...fadeUp(0.5)} className="mt-4 font-display text-2xl font-semibold sm:text-3xl">
-            <span className="text-gradient">Software Developer</span> <span className="text-muted">&amp;</span>{" "}
-            <span className="text-gradient">AI Trainer</span>
+            <span className="text-shine">Software Developer &amp; AI Trainer</span>
           </motion.p>
 
-          <motion.p {...fadeUp(0.62)} className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+          <motion.p {...fadeUp(0.56)} className="mt-5 font-mono text-[15px] text-slate-300 sm:text-base">
+            <span className="text-accent">&gt;</span> I build <Scramble words={buildWords} className="text-accent-2" />
+            <span className="caret ml-1" aria-hidden />
+          </motion.p>
+
+          <motion.p {...fadeUp(0.66)} className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
             {profile.intro}
           </motion.p>
 
           <motion.div {...fadeUp(0.74)} className="mt-9 flex flex-wrap gap-3">
+            <Magnetic>
             <a
               href="#projects"
               className="group inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-medium text-bg shadow-[0_10px_40px_-10px_rgb(52_211_153/0.7)] transition hover:-translate-y-0.5"
             >
               See my work <FiArrowRight className="transition group-hover:translate-x-0.5" aria-hidden />
             </a>
+            </Magnetic>
+            <Magnetic>
             <a
               href={profile.resume}
               download
@@ -71,6 +80,7 @@ const Hero = () => {
             >
               Download resume <FiDownload aria-hidden />
             </a>
+            </Magnetic>
           </motion.div>
 
           <motion.div {...fadeUp(0.86)} className="mt-9 flex flex-wrap items-center gap-x-5 gap-y-3 text-muted">

@@ -1,7 +1,6 @@
 // Portfolio ka saara content yahan hai. Kuch badalna ho to sirf yeh file edit karo.
 import notesImg from "./assets/notes.webp";
 import bookstoreImg from "./assets/bookstore.webp";
-import simonImg from "./assets/simon.webp";
 import spotifyImg from "./assets/spotify.webp";
 
 const base = import.meta.env.BASE_URL;
@@ -11,7 +10,7 @@ export const profile = {
   role: "Software Developer & AI Trainer",
   status: "Open to AI training and developer roles",
   intro:
-    "I build web apps in React and JavaScript. I also write and grade coding tasks for AI models on Outlier, Alignerr and Chegg.",
+    "I write and grade coding tasks for AI models on Outlier, Alignerr and Chegg, and I've done two developer internships working in React and Phaser.",
   location: "Delhi NCR, India",
   email: "atifatul752@gmail.com",
   resume: `${base}MD_Atif_Reyyani_Resume.pdf`,
@@ -24,12 +23,17 @@ export const links = [
   { label: "GeeksforGeeks", handle: "mdatifreyys154", href: "https://www.geeksforgeeks.org/user/mdatifreyys154/", icon: "gfg" },
 ];
 
-export const stats = [
-  { value: 100, suffix: "+", label: "hours of AI training work on Outlier" },
-  { value: 200, suffix: "+", label: "problems solved on LeetCode" },
-  { value: 150, suffix: "+", label: "problems solved on GeeksforGeeks" },
-  { value: 2, suffix: "", label: "developer internships" },
-];
+export const stats = {
+  hours: { value: 500, suffix: "+", label: "hours of AI training work" },
+  leetcode: { value: 200, suffix: "+", label: "problems solved on LeetCode" },
+  gfg: { value: 150, suffix: "+", label: "problems solved on GeeksforGeeks" },
+};
+
+// hero mein "I build ..." ke baad yeh words badalte rehte hain
+export const buildWords = ["React apps", "full-stack web apps", "2D games for kids", "coding tasks for AI models"];
+
+// bada scrolling text band
+export const bandWords = ["Software Developer", "AI Trainer", "React", "Python", "RLHF", "Phaser", "Node.js", "Code evals"];
 
 export const about = {
   paragraphs: [
@@ -38,11 +42,11 @@ export const about = {
     "I learn fastest by building. My first Phaser game went live a day after I started learning Phaser, and a month later I was building learning games for kindergarten kids at Abhiwan Technology.",
     "I also worked as a Subject Matter Expert for calculus on Chegg from 2022, answering students' questions with full explanations.",
   ],
-  facts: [
-    { label: "Based in", value: "Delhi NCR, India" },
-    { label: "Degree", value: "B.Tech CSE, 2025 · 82.3%" },
-    { label: "TCS NQT", value: "78.21%" },
-    { label: "In college", value: "Vice Event Head, GFG Student Chapter" },
+  college: [
+    "Vice Event Head, GFG Student Chapter",
+    "Vice President, CES Society",
+    "Class Representative",
+    "TCS NQT score: 78.21%",
   ],
 };
 
@@ -172,16 +176,6 @@ export const projects = [
     tags: ["React", "Phaser", "JavaScript"],
     cover: "runner",
     code: "https://github.com/atifatul/Runner-game",
-  },
-  {
-    title: "Simon Says",
-    category: "Games",
-    blurb: "The classic memory game in plain JavaScript, no libraries.",
-    points: ["Each level flashes one more color. One wrong click ends the game and shows your score."],
-    tags: ["JavaScript", "HTML", "CSS"],
-    image: simonImg,
-    live: "https://simon-game-two-nu.vercel.app/",
-    code: "https://github.com/atifatul/Simon-Game",
   },
   {
     title: "Spotify UI",

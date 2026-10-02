@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { MotionConfig } from "motion/react";
+import Lenis from "lenis";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import Stats from "./components/Stats";
+import KineticBand from "./components/KineticBand";
 import About from "./components/About";
 import WhatIDo from "./components/WhatIDo";
 import Experience from "./components/Experience";
@@ -36,22 +37,42 @@ function CursorGlow() {
   return <div ref={ref} className="cursor-glow" aria-hidden />;
 }
 
-const App = () => (
-  <MotionConfig reducedMotion="user">
-    <CursorGlow />
-    <Navbar />
-    <main>
-      <Hero />
-      <Stats />
-      <About />
-      <WhatIDo />
-      <Experience />
-      <Projects />
-      <Skills />
-      <Contact />
-    </main>
-    <Footer />
-  </MotionConfig>
-);
+// makkhan jaisi smooth scrolling (Lenis). Reduced motion wale users ke liye band.
+function useSmoothScroll() {
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const lenis = new Lenis({ lerp: 0.11, anchors: { offset: -84 } });
+    let id = requestAnimationFrame(function raf(t) {
+      lenis.raf(t);
+      id = requestAnimationFrame(raf);
+    });
+    return () => {
+      cancelAnimationFrame(id);
+      lenis.destroy();
+    };
+  }, []);
+}
+
+const App = () => {
+  useSmoothScroll();
+  return (
+    <MotionConfig reducedMotion="user">
+      <CursorGlow />
+      <div className="grain" aria-hidden />
+      <Navbar />
+      <main>
+        <Hero />
+        <KineticBand />
+        <About />
+        <WhatIDo />
+        <Experience />
+        <Projects />
+        <Skills />
+        <Contact />
+      </main>
+      <Footer />
+    </MotionConfig>
+  );
+};
 
 export default App;

@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { FiArrowUpRight } from "react-icons/fi";
 import { FaGithub } from "react-icons/fa";
 import { projects } from "../data";
-import { Section, SectionHeading, SpotCard, Tag, Reveal } from "./ui";
-
-const categories = ["All", "Full-stack", "Frontend", "Games", "Python"];
+import { Section, SectionHeading, SpotCard, Tag } from "./ui";
 
 // MediaPipe jaise hand points, Hand Gesture project ke cover ke liye
 const hand = {
@@ -23,9 +21,8 @@ function GestureCover() {
   const [wx, wy] = hand.wrist;
   const bases = hand.fingers.slice(1).map((f) => f[0]);
   return (
-    <div className="relative flex h-full items-center justify-center bg-linear-to-br from-[#0b1a24] to-[#081019]">
-      <div className="dot-grid absolute inset-0 opacity-60" aria-hidden />
-      <svg viewBox="0 0 200 200" className="relative h-[85%]" aria-hidden>
+    <div className="relative flex h-full min-h-[240px] items-center justify-center">
+      <svg viewBox="0 0 200 200" className="relative h-[78%] max-h-[340px] transition duration-700 group-hover:scale-105" aria-hidden>
         <g stroke="rgb(52 211 153 / 0.55)" strokeWidth="2" fill="none" strokeLinecap="round">
           {hand.fingers.map((f, i) => (
             <polyline key={i} points={[[wx, wy], ...f].map((p) => p.join(",")).join(" ")} />
@@ -36,30 +33,34 @@ function GestureCover() {
           <circle key={i} cx={x} cy={y} r="4" fill="#22d3ee" stroke="#070b14" strokeWidth="1.5" />
         ))}
       </svg>
-      <span className="absolute bottom-3 right-4 font-mono text-[11px] text-accent/80">MediaPipe + TensorFlow</span>
+      <span className="absolute bottom-4 right-5 font-mono text-[11px] text-accent/80">MediaPipe + TensorFlow</span>
     </div>
   );
 }
 
 function RunnerCover() {
   return (
-    <div className="relative h-full overflow-hidden bg-linear-to-b from-[#101a33] to-[#0a1222]">
-      <div className="absolute inset-x-0 top-4 text-center font-mono text-[11px] tracking-widest text-muted">TARGET: ATIF</div>
-      <div className="absolute inset-x-0 top-10 flex justify-center gap-3 font-display text-3xl font-bold">
+    <div className="relative h-full min-h-[240px] overflow-hidden">
+      <div className="absolute inset-x-0 top-[14%] text-center font-mono text-xs tracking-[0.3em] text-muted">TARGET: ATIF</div>
+      <div className="absolute inset-x-0 top-[22%] flex justify-center gap-4 font-display text-5xl font-bold">
         <span className="text-accent">A</span>
         <span className="text-accent">T</span>
         <span className="text-slate-600">_</span>
         <span className="text-slate-600">_</span>
       </div>
       <motion.span
-        className="absolute bottom-[34%] flex h-9 w-9 items-center justify-center rounded-lg border border-accent-2/50 bg-accent-2/10 font-display font-bold text-accent-2"
+        className="absolute bottom-[34%] flex h-11 w-11 items-center justify-center rounded-xl border border-accent-2/50 bg-accent-2/10 font-display text-lg font-bold text-accent-2"
         initial={{ left: "100%" }}
         animate={{ left: "-15%" }}
         transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
       >
         I
       </motion.span>
-      <span className="absolute bottom-[24%] left-[18%] h-8 w-6 rounded-md bg-accent shadow-[0_0_20px_rgb(52_211_153/0.6)]" />
+      <motion.span
+        className="absolute bottom-[24%] left-[18%] h-10 w-7 rounded-md bg-accent shadow-[0_0_24px_rgb(52_211_153/0.6)]"
+        animate={{ y: [0, -46, 0] }}
+        transition={{ duration: 1.75, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.6 }}
+      />
       <div className="absolute inset-x-0 bottom-[24%] h-px bg-line" />
       <div className="absolute inset-x-0 bottom-0 h-[24%] bg-[repeating-linear-gradient(90deg,rgb(148_163_184/0.08)_0_2px,transparent_2px_28px)]" />
     </div>
@@ -67,61 +68,86 @@ function RunnerCover() {
 }
 
 const covers = { gesture: GestureCover, runner: RunnerCover };
+const tints = [
+  "from-emerald-500/20",
+  "from-cyan-500/20",
+  "from-violet-500/20",
+  "from-amber-500/15",
+  "from-sky-500/20",
+];
 
-function ProjectCard({ p }) {
+// screenshot ek browser window ke andar, hover pe seedha ho jata hai
+function BrowserShot({ p }) {
+  const host = p.live ? new URL(p.live).hostname : "";
+  return (
+    <div className="relative w-full overflow-hidden rounded-xl border border-white/10 bg-bg shadow-2xl shadow-black/60 transition duration-700 [transform:perspective(1400px)_rotateY(-8deg)_rotateX(3deg)] group-hover:[transform:perspective(1400px)_rotateY(0deg)_rotateX(0deg)_scale(1.02)]">
+      <div className="flex items-center gap-1.5 border-b border-white/10 bg-surface-2 px-3 py-2">
+        <span className="h-2 w-2 rounded-full bg-[#ff5f57]" />
+        <span className="h-2 w-2 rounded-full bg-[#febc2e]" />
+        <span className="h-2 w-2 rounded-full bg-[#28c840]" />
+        <span className="ml-2 truncate rounded bg-white/5 px-2 py-0.5 font-mono text-[10px] text-muted">{host}</span>
+      </div>
+      <img src={p.image} alt={`${p.title} screenshot`} loading="lazy" className="block w-full" />
+    </div>
+  );
+}
+
+function ProjectCard({ p, i, total }) {
   const Cover = covers[p.cover];
   return (
-    <SpotCard className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface/70">
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-line bg-surface-2">
-        {p.image ? (
-          <img
-            src={p.image}
-            alt={`${p.title} screenshot`}
-            loading="lazy"
-            className="h-full w-full object-cover object-top transition duration-700 group-hover:scale-[1.05]"
-          />
-        ) : (
-          Cover && <Cover />
-        )}
-        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-surface/70 via-transparent to-transparent" />
-        <div className="absolute left-3 top-3 flex gap-2">
-          <span className="rounded-full border border-white/10 bg-bg/80 px-2.5 py-1 font-mono text-[11px] text-fg backdrop-blur">
-            {p.category}
-          </span>
-          {p.note && (
-            <span className="rounded-full border border-accent/30 bg-bg/80 px-2.5 py-1 font-mono text-[11px] text-accent backdrop-blur">
-              {p.note}
-            </span>
-          )}
-        </div>
+    <SpotCard className="group grid overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl shadow-black/50 lg:h-[540px] lg:grid-cols-[1.12fr_1fr]">
+      <div
+        className={`relative flex items-center justify-center overflow-hidden border-b border-line bg-linear-to-br ${tints[i % tints.length]} to-transparent p-6 sm:p-10 lg:border-b-0 lg:border-r`}
+      >
+        <div className="dot-grid absolute inset-0 opacity-50" aria-hidden />
+        <div className="relative w-full">{p.image ? <BrowserShot p={p} /> : Cover && <Cover />}</div>
       </div>
 
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="font-display text-xl font-semibold">{p.title}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted">{p.blurb}</p>
+      <div className="flex flex-col p-6 sm:p-8 lg:p-10">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="mr-2 font-mono text-sm text-muted">
+            {String(i + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          </span>
+          <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-fg">{p.category}</span>
+          {p.note && (
+            <span className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 font-mono text-[11px] text-accent">{p.note}</span>
+          )}
+        </div>
+        <h3 className="mt-5 font-display text-3xl font-bold tracking-tight">{p.title}</h3>
+        <p className="mt-3 leading-relaxed text-muted">{p.blurb}</p>
         {p.points.length > 0 && (
-          <ul className="mt-3 space-y-1.5">
+          <ul className="mt-4 space-y-2">
             {p.points.map((pt) => (
-              <li key={pt} className="flex gap-2.5 text-sm leading-relaxed text-slate-300">
-                <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
+              <li key={pt} className="flex gap-2.5 text-[15px] leading-relaxed text-slate-300">
+                <span className="mt-[0.6rem] h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
                 {pt}
               </li>
             ))}
           </ul>
         )}
-        <div className="mt-4 flex flex-wrap gap-1.5">
+        <div className="mt-5 flex flex-wrap gap-1.5">
           {p.tags.map((t) => (
             <Tag key={t}>{t}</Tag>
           ))}
         </div>
-        <div className="mt-auto flex items-center gap-5 pt-5 text-sm font-medium">
+        <div className="mt-auto flex flex-wrap items-center gap-3 pt-7 text-sm font-medium">
           {p.live && (
-            <a href={p.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-accent hover:underline">
+            <a
+              href={p.live}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-bg transition hover:-translate-y-0.5"
+            >
               Live demo <FiArrowUpRight aria-hidden />
             </a>
           )}
           {p.code && (
-            <a href={p.code} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-slate-300 hover:text-fg">
+            <a
+              href={p.code}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-fg transition hover:-translate-y-0.5 hover:border-accent/50"
+            >
               <FaGithub aria-hidden /> Code
             </a>
           )}
@@ -132,53 +158,56 @@ function ProjectCard({ p }) {
   );
 }
 
+function useIsDesktop() {
+  const query = "(min-width: 1024px)";
+  const [match, setMatch] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const m = window.matchMedia(query);
+    const on = () => setMatch(m.matches);
+    m.addEventListener("change", on);
+    return () => m.removeEventListener("change", on);
+  }, []);
+  return match;
+}
+
+// desktop pe cards scroll ke saath ek ke upar ek stack hote hain, peeche wale thode chhote ho jaate hain
+function StackItem({ p, i, total, progress, desktop }) {
+  const scale = useTransform(progress, [i / total, 1], [1, 1 - (total - 1 - i) * 0.05]);
+  if (!desktop) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        <ProjectCard p={p} i={i} total={total} />
+      </motion.div>
+    );
+  }
+  return (
+    <div className="sticky top-0 flex h-[88vh] min-h-[640px] items-center">
+      <motion.div style={{ scale, top: `${i * 28}px` }} className="relative w-full origin-top">
+        <ProjectCard p={p} i={i} total={total} />
+      </motion.div>
+    </div>
+  );
+}
+
 const Projects = () => {
-  const [cat, setCat] = useState("All");
-  const shown = projects.filter((p) => cat === "All" || p.category === cat);
+  const ref = useRef(null);
+  const desktop = useIsDesktop();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   return (
     <Section id="projects">
-      <SectionHeading
-        index="04"
-        kicker="projects"
-        title="Things I've built"
-        sub="Live demos where I have them, and the code on GitHub."
-      />
-
-      <Reveal className="mb-8 flex flex-wrap gap-2" y={12}>
-        {categories.map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setCat(c)}
-            className={`relative isolate rounded-full border px-4 py-1.5 text-sm transition-colors ${
-              cat === c ? "border-accent/40 text-bg" : "border-line text-muted hover:text-fg"
-            }`}
-          >
-            {cat === c && (
-              <motion.span layoutId="proj-pill" className="absolute inset-0 -z-10 rounded-full bg-accent" transition={{ type: "spring", stiffness: 380, damping: 30 }} />
-            )}
-            {c}
-          </button>
+      <SectionHeading index="04" kicker="projects" title="Things I've built" sub="Live demos where I have them, and the code on GitHub." />
+      <div ref={ref} className="relative">
+        {projects.map((p, i) => (
+          <StackItem key={p.title} p={p} i={i} total={projects.length} progress={scrollYProgress} desktop={desktop} />
         ))}
-      </Reveal>
-
-      <motion.div layout className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence mode="popLayout">
-          {shown.map((p) => (
-            <motion.article
-              layout
-              key={p.title}
-              initial={{ opacity: 0, scale: 0.96, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.35 }}
-            >
-              <ProjectCard p={p} />
-            </motion.article>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      </div>
     </Section>
   );
 };

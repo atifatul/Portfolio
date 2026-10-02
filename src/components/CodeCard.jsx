@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
 import { FiRotateCcw, FiAward, FiCpu } from "react-icons/fi";
 import { SpotCard } from "./ui";
 import { ease } from "./ease";
@@ -104,7 +104,27 @@ function ReviewView({ onReplay }) {
 
 const tabs = ["atif.js", "review.md"];
 
+// card mouse ke hisaab se halka sa 3D mein ghoomta hai
+function useTilt() {
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const rotateX = useSpring(rx, { stiffness: 150, damping: 16 });
+  const rotateY = useSpring(ry, { stiffness: 150, damping: 16 });
+  function onPointerMove(e) {
+    if (e.pointerType !== "mouse") return;
+    const r = e.currentTarget.getBoundingClientRect();
+    ry.set(((e.clientX - r.left) / r.width - 0.5) * 12);
+    rx.set(-((e.clientY - r.top) / r.height - 0.5) * 12);
+  }
+  function onPointerLeave() {
+    rx.set(0);
+    ry.set(0);
+  }
+  return { style: { rotateX, rotateY, transformPerspective: 1100 }, onPointerMove, onPointerLeave };
+}
+
 const CodeCard = () => {
+  const tilt = useTilt();
   const [tab, setTab] = useState(0);
   const [picked, setPicked] = useState(false);
   const [run, setRun] = useState(0);
@@ -124,6 +144,7 @@ const CodeCard = () => {
       className="relative mx-auto w-full max-w-[520px] [perspective:1200px]"
     >
       <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-linear-to-br from-accent/25 via-transparent to-accent-2/20 blur-2xl" aria-hidden />
+      <motion.div {...tilt} className="relative">
 
       <SpotCard className="overflow-hidden rounded-2xl border border-line bg-surface/85 shadow-2xl shadow-black/50 backdrop-blur-xl">
         <div className="flex items-center gap-4 border-b border-line bg-white/[0.02] px-4">
@@ -180,7 +201,8 @@ const CodeCard = () => {
         animate={{ y: [0, 6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       >
-        <FiCpu className="text-accent-2" aria-hidden /> 100+ hours of AI training
+        <FiCpu className="text-accent-2" aria-hidden /> 500+ hours of AI training
+      </motion.div>
       </motion.div>
     </motion.div>
   );
