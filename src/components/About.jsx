@@ -1,86 +1,52 @@
-import React from "react";
-import PassportPhoto from "../assets/Atif reyyani .png";
 import { motion } from "motion/react";
-const About = () => {
-  return (
-    <section id="about" className="bg-[#111111] text-white py-20 top-4">
-      <div className="container mx-auto px-4">
-        <motion.h2
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-center mb-12 top-2"
-        >
-          About Me
-        </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-32">
-          {/* About Image Placeholder */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="w-full max-w-sm mx-auto"
-            style={{ opacity: "1", transform: "none", width: "47%" }}
-          >
-            <div className="bg-gray-700 rounded-full w-full h-80 flex items-center justify-center overflow-hidden">
-              <img
-                src={PassportPhoto}
-                alt="Passport"
-                className="object-fit object-top-right rounded-full w-full h-full"
-              />
-            </div>
-          </motion.div>
+import { FiMapPin } from "react-icons/fi";
+import photo from "../assets/atif.webp";
+import { about, profile } from "../data";
+import { Reveal, Section, SectionHeading } from "./ui";
 
-          {/* About Text Content */}
-          <div>
-            <motion.h3
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1 }}
-              viewport={{ once: true }}
-              className="text-2xl font-semibold mb-4 underline"
-            >
-              A bit about me :
-            </motion.h3>
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
-              viewport={{ once: true }}
-              className="text-gray-300 mb-4 text-xl"
-            >
-              I am a passionate full-stack developer with experience in building
-              modern, responsive, and scalable web applications. I love solving
-              complex problems and turning ideas into reality.
-            </motion.p>
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
-              viewport={{ once: true }}
-              className="text-gray-300 mb-6 text-xl"
-            >
-              My expertise lies in the MERN stack (MongoDB, Express.js,
-              React.js, Node.js) and deploying applications using Netlify and
-              Vercel.
-            </motion.p>
-            <motion.a
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 2 }}
-              viewport={{ once: true }}
-              href="#contact"
-              className="bg-amber-400 text-black font-semibold px-6 py-3 rounded hover:bg-gray-200 transition-colors"
-            >
-              Get In Touch
-            </motion.a>
+const About = () => (
+  <Section id="about">
+    <SectionHeading index="01" kicker="about" title="A bit about me" />
+
+    <div className="grid items-start gap-12 lg:grid-cols-[340px_1fr] lg:gap-16">
+      <Reveal className="mx-auto w-full max-w-[340px]">
+        <motion.div whileHover={{ rotate: -1.5, y: -4 }} transition={{ type: "spring", stiffness: 260, damping: 20 }} className="relative">
+          <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-linear-to-br from-accent/30 to-accent-2/20 blur-2xl" aria-hidden />
+          <div className="rounded-3xl bg-linear-to-br from-accent/70 via-line to-accent-2/70 p-px">
+            <div className="overflow-hidden rounded-3xl bg-surface">
+              <img src={photo} alt="MD Atif Reyyani" width="492" height="632" className="aspect-[4/5] w-full object-cover" />
+              <div className="flex items-center justify-between border-t border-line px-5 py-4">
+                <div>
+                  <p className="font-display font-semibold">{profile.name}</p>
+                  <p className="text-sm text-muted">{profile.role}</p>
+                </div>
+                <span className="flex items-center gap-1 text-xs text-muted">
+                  <FiMapPin aria-hidden /> NCR
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
+        </motion.div>
+      </Reveal>
+
+      <div>
+        {about.paragraphs.map((p, i) => (
+          <Reveal key={i} delay={i * 0.06}>
+            <p className={`mb-5 text-lg leading-relaxed ${i === 0 ? "text-fg" : "text-muted"}`}>{p}</p>
+          </Reveal>
+        ))}
+
+        <Reveal delay={0.2} className="mt-8 grid gap-3 sm:grid-cols-2">
+          {about.facts.map((f) => (
+            <div key={f.label} className="rounded-2xl border border-line bg-surface/60 px-5 py-4">
+              <p className="font-mono text-xs uppercase tracking-wider text-accent">{f.label}</p>
+              <p className="mt-1 text-fg">{f.value}</p>
+            </div>
+          ))}
+        </Reveal>
       </div>
-    </section>
-  );
-};
+    </div>
+  </Section>
+);
 
 export default About;

@@ -23,7 +23,12 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // motion.div jaisa JSX use bhi "used" gina jaye
+      'no-unused-vars': ['error', { varsIgnorePattern: '^([A-Z_]|motion$)', destructuredArrayIgnorePattern: '^[A-Z]' }],
     },
+  },
+  {
+    files: ['vite.config.js'],
+    languageOptions: { globals: globals.node },
   },
 ])

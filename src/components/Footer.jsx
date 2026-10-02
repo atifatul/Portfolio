@@ -1,22 +1,17 @@
-import React from "react";
-import { motion } from "motion/react";
-const Footer = () => {
-  return (
-    <footer className="bg-[#191919] text-gray-400 py-6 text-center">
-      <motion.div
-        initial={{ opacity: 0, x: -30 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        viewport={{ once: true }}
-        className="container mx-auto px-6"
-      >
-        <p>
-          &copy; {new Date().getFullYear()} Md Atif Reyyani. All Rights
-          Reserved.
-        </p>
-      </motion.div>
-    </footer>
-  );
-};
+import { FiArrowUp } from "react-icons/fi";
+import { profile } from "../data";
+
+const Footer = () => (
+  <footer className="border-t border-line">
+    <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-8 text-sm text-muted sm:flex-row">
+      <p>
+        © {new Date().getFullYear()} {profile.name}. Built with React, Tailwind CSS and Vite.
+      </p>
+      <a href="#top" className="inline-flex items-center gap-1.5 transition hover:text-accent">
+        Back to top <FiArrowUp aria-hidden />
+      </a>
+    </div>
+  </footer>
+);
 
 export default Footer;

@@ -1,83 +1,87 @@
-import React from "react";
-import { motion } from "motion/react";
+import { useState } from "react";
+import { FiCheck, FiCopy, FiDownload, FiMail, FiArrowUpRight } from "react-icons/fi";
+import { profile, links } from "../data";
+import { BrandIcon, Reveal, Section } from "./ui";
 
 const Contact = () => {
+  const [copied, setCopied] = useState(false);
+
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${profile.email}`;
+    }
+  }
+
   return (
-    <section id="contact" className="bg-[#111111] text-white py-20">
-      <div className="container mx-auto px-6 md:px-12 lg:px-20 text-center">
-        <div className="mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            viewport={{ once: true }}
-            className="text-4xl font-bold"
-          >
-            Get In Touch
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            viewport={{ once: true }}
-            className="text-gray-400 mt-4 max-w-2xl mx-auto"
-          >
-            I'm currently looking for new opportunities, my inbox is always
-            open. Whether you have a question or just want to say hi, I'll try
-            my best to get back to you!
-          </motion.p>
-        </div>
+    <Section id="contact">
+      <Reveal>
+        <div className="relative overflow-hidden rounded-[2rem] border border-line bg-surface/70 px-6 py-16 text-center sm:px-12 sm:py-20">
+          <div className="dot-grid pointer-events-none absolute inset-0" aria-hidden />
+          <div className="blob left-1/2 top-0 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 bg-accent/20" aria-hidden />
 
-        <motion.a
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 2 }}
-          viewport={{ once: true }}
-          href="mailto:atifatul752@gmail.com"
-          className="bg-white text-black font-bold text-xl px-8 py-4 rounded-lg inline-block transform transition-transform duration-300 hover:scale-105"
-        >
-          Say Hello
-        </motion.a>
+          <div className="relative">
+            <p className="font-mono text-sm text-accent">
+              <span className="text-muted">06 /</span> contact
+            </p>
+            <h2 className="mt-3 font-display text-4xl font-bold tracking-tight sm:text-6xl">
+              Let's work <span className="text-gradient">together</span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
+              I'm looking for more AI training and code evaluation projects, and I'm open to frontend and full-stack
+              developer roles, remote or on-site in Delhi NCR. Email is the fastest way to reach me.
+            </p>
 
-        <div className="mt-12">
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            viewport={{ once: true }}
-            className="text-gray-400 mb-4"
-          >
-            You can also find me on:
-          </motion.p>
-          <div className="flex justify-center space-x-6">
-            <a
-              href="https://github.com/atifatul" // Yahan apna GitHub link daalna
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-lg hover:text-gray-300 underline"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://www.linkedin.com/in/md-atif-reyyani/" // Yahan apna LinkedIn link daalna
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-lg hover:text-gray-300 underline"
-            >
-              LinkedIn
-            </a>
-            <a
-              href="https://x.com/AtifReyyani" // Yahan apna Twitter/X link daalna
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-lg hover:text-gray-300 underline"
-            >
-              Twitter
-            </a>
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
+              <a
+                href={`mailto:${profile.email}`}
+                className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-medium text-bg shadow-[0_10px_40px_-10px_rgb(52_211_153/0.7)] transition hover:-translate-y-0.5"
+              >
+                <FiMail aria-hidden /> {profile.email}
+              </a>
+              <button
+                type="button"
+                onClick={copyEmail}
+                className="inline-flex items-center gap-2 rounded-xl border border-line bg-white/[0.03] px-4 py-3 text-fg transition hover:border-accent/50"
+                aria-label="Copy email address"
+              >
+                {copied ? <FiCheck className="text-accent" aria-hidden /> : <FiCopy aria-hidden />}
+                {copied ? "Copied" : "Copy"}
+              </button>
+              <a
+                href={profile.resume}
+                download
+                className="inline-flex items-center gap-2 rounded-xl border border-line bg-white/[0.03] px-5 py-3 font-medium text-fg transition hover:-translate-y-0.5 hover:border-accent/50"
+              >
+                Resume <FiDownload aria-hidden />
+              </a>
+            </div>
+
+            <div className="mx-auto mt-12 grid max-w-4xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {links.map((l) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-center gap-3 rounded-2xl border border-line bg-bg/60 px-4 py-3.5 text-left transition hover:-translate-y-0.5 hover:border-accent/40"
+                >
+                  <BrandIcon name={l.icon} className="h-5 w-5 shrink-0 text-muted transition group-hover:text-accent" />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-medium text-fg">{l.label}</span>
+                    <span className="block truncate font-mono text-[11px] text-muted">{l.handle}</span>
+                  </span>
+                  <FiArrowUpRight className="ml-auto shrink-0 text-muted opacity-0 transition group-hover:opacity-100" aria-hidden />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </Reveal>
+    </Section>
   );
 };
 

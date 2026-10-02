@@ -1,89 +1,71 @@
-import React from "react";
-import { motion } from "motion/react";
-// Aap yahan apni skills aur unke icons add/change kar sakte ho
-// Icons ke liye aap devicon.dev jaisi website use kar sakte ho
-const skills = [
-  {
-    name: "HTML5",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-plain-wordmark.svg",
-  },
-  {
-    name: "CSS3",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-plain-wordmark.svg",
-  },
-  {
-    name: "JavaScript",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-  },
-  {
-    name: "React",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-  },
-  {
-    name: "Node.js",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-  },
-  {
-    name: "Express",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
-  },
-  {
-    name: "MongoDB",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
-  },
-  {
-    name: "Tailwind CSS",
-    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
-  },
+import {
+  SiReact, SiJavascript, SiTypescript, SiPython, SiNodedotjs, SiExpress, SiMongodb, SiTailwindcss,
+  SiRedux, SiGit, SiDocker, SiPytest, SiPostman, SiVercel, SiCplusplus, SiMysql,
+} from "react-icons/si";
+import { skillGroups } from "../data";
+import { Reveal, Section, SectionHeading, SpotCard } from "./ui";
+
+const marquee = [
+  [SiReact, "React", "#61dafb"],
+  [SiJavascript, "JavaScript", "#f7df1e"],
+  [SiPython, "Python", "#4b8bbe"],
+  [SiNodedotjs, "Node.js", "#5fa04e"],
+  [SiExpress, "Express", "#e6edf6"],
+  [SiMongodb, "MongoDB", "#47a248"],
+  [SiTailwindcss, "Tailwind CSS", "#38bdf8"],
+  [SiTypescript, "TypeScript", "#3178c6"],
+  [SiRedux, "Redux", "#a37fe0"],
+  [SiGit, "Git", "#f05032"],
+  [SiDocker, "Docker", "#2496ed"],
+  [SiPytest, "pytest", "#62b5e5"],
+  [SiPostman, "Postman", "#ff6c37"],
+  [SiCplusplus, "C++", "#659ad2"],
+  [SiMysql, "SQL", "#4479a1"],
+  [SiVercel, "Vercel", "#e6edf6"],
 ];
 
-const Skills = () => {
-  return (
-    <section id="skills" className="bg-[#111111] text-white py-20">
-      <div className="container mx-auto px-6 md:px-12 lg:px-20">
-        <div className="text-center mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            viewport={{ once: true }}
-            className="text-4xl font-bold"
-          >
-            My Tech Stack
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            viewport={{ once: true }}
-            className="text-gray-400 mt-2"
-          >
-            Technologies I've been working with recently
-          </motion.p>
-        </div>
+const Skills = () => (
+  <Section id="skills">
+    <SectionHeading index="05" kicker="skills" title="What I work with" />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 mb-34">
-          {skills.map((skill,index) => (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              key={skill.name}
-              className="bg-[#191919] p-6 rounded-lg flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-105 hover:bg-[#222222]"
-            >
-              <img
-                src={skill.icon}
-                alt={skill.name}
-                className="w-16 h-16 mb-4"
-              />
-              <p className="text-lg font-semibold">{skill.name}</p>
-            </motion.div>
-          ))}
-        </div>
+    <Reveal className="marquee -mx-5 mb-12 overflow-hidden py-2">
+      <div className="marquee-track flex w-max gap-4">
+        {[...marquee, ...marquee].map(([Icon, name, hex], i) => (
+          <span
+            key={i}
+            className="flex items-center gap-2.5 rounded-xl border border-line bg-surface/60 px-4 py-2.5 text-sm text-slate-300"
+            aria-hidden={i >= marquee.length}
+          >
+            <Icon style={{ color: hex }} className="h-4 w-4" aria-hidden />
+            {name}
+          </span>
+        ))}
       </div>
-    </section>
-  );
-};
+    </Reveal>
+
+    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {skillGroups.map((g, i) => {
+        const ai = g.title === "AI evaluation";
+        const wide = ai ? "md:col-span-2" : g.title === "Core CS" ? "lg:col-span-2" : "";
+        return (
+          <Reveal key={g.title} delay={(i % 3) * 0.08} className={wide}>
+            <SpotCard
+              className={`h-full rounded-2xl border p-6 ${ai ? "border-accent/30 bg-accent/[0.04]" : "border-line bg-surface/60"}`}
+            >
+              <h3 className="font-mono text-sm text-accent">{g.title}</h3>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {g.items.map((s) => (
+                  <span key={s} className="rounded-lg border border-line bg-white/[0.03] px-3 py-1.5 text-sm text-slate-200">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </SpotCard>
+          </Reveal>
+        );
+      })}
+    </div>
+  </Section>
+);
 
 export default Skills;

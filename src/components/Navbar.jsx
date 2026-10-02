@@ -1,132 +1,130 @@
-import React, { useState } from "react";
-import { motion } from "motion/react";
-import ParticlesBackground from "./lightswind/particles-background";
+import { useEffect, useState } from "react";
+import { motion, useScroll, useSpring, AnimatePresence } from "motion/react";
+import { FiMenu, FiX, FiDownload } from "react-icons/fi";
+import { profile } from "../data";
+
+const items = [
+  { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
+  { id: "contact", label: "Contact" },
+];
 
 const Navbar = () => {
-  // State to manage whether the mobile menu is open or closed
-  const [isOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState("");
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // jo section screen ke beech mein hai, uska link highlight hota hai
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id === "top" ? "" : e.target.id)),
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    [{ id: "top" }, ...items].forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, []);
 
   return (
-    <motion.nav
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="bg-[#111111] text-white p-4 sm:p-6 fixed w-full top-0 z-20"
-    >
-      <div className="container mx-auto flex justify-between items-center relative">
-        <ParticlesBackground/>
-        <div className="text-2xl font-bold">
-          <a href="#">&lt;Md Atif Reyyani/&gt;</a>
-        </div>
+    <header className="fixed inset-x-0 top-0 z-50 px-3">
+      <motion.div
+        style={{ scaleX: progress }}
+        className="fixed inset-x-0 top-0 h-0.5 origin-left bg-linear-to-r from-accent to-accent-2"
+      />
+      <nav
+        className={`mx-auto mt-3 flex max-w-5xl items-center justify-between rounded-2xl border px-4 py-2.5 transition-all duration-300 sm:px-5 ${
+          scrolled || open ? "border-line bg-bg/75 shadow-lg shadow-black/30 backdrop-blur-xl" : "border-transparent"
+        }`}
+      >
+        <a href="#top" className="font-display text-lg font-bold tracking-tight" onClick={() => setOpen(false)}>
+          <span className="text-accent">&lt;</span>Atif<span className="text-accent"> /&gt;</span>
+        </a>
 
-        {/* Desktop Menu (hidden on mobile) */}
-        <div className="hidden md:flex space-x-8">
-          <a href="#home" className="hover:text-gray-400">
-            Home
-          </a>
-          <a href="#about" className="hover:text-gray-400">
-            About
-          </a>
-          <a href="#skills" className="hover:text-gray-400">
-            Skills
-          </a>
-          <a href="#project" className="hover:text-gray-400">
-            Project
-          </a>
-          <a href="#contact" className="hover:text-gray-400">
-            Contact
-          </a>
-        </div>
+        <ul className="hidden items-center gap-1 md:flex">
+          {items.map(({ id, label }) => (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                className={`relative isolate rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                  active === id ? "text-fg" : "text-muted hover:text-fg"
+                }`}
+              >
+                {active === id && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 -z-10 rounded-lg bg-white/[0.07]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
 
-        {/* Hamburger Menu Button (visible on mobile) */}
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
-            {isOpen ? (
-              // Close Icon (X)
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              // Hamburger Icon (bars)
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-            )}
+        <div className="flex items-center gap-2">
+          <a
+            href={profile.resume}
+            download
+            className="hidden items-center gap-2 rounded-xl border border-accent/40 bg-accent/10 px-3.5 py-1.5 text-sm font-medium text-accent transition hover:bg-accent/20 sm:inline-flex"
+          >
+            Resume <FiDownload aria-hidden />
+          </a>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            className="rounded-lg p-2 text-fg md:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+          >
+            {open ? <FiX size={20} /> : <FiMenu size={20} />}
           </button>
         </div>
+      </nav>
 
-        {/* Mobile Menu (dropdown) */}
-        {/* It appears below the navbar when isOpen is true */}
-        <div
-          className={`absolute top-full left-0 w-full bg-[#191919] md:hidden transition-all duration-300 ease-in-out ${
-            isOpen
-              ? "max-h-96 opacity-100"
-              : "max-h-0 opacity-0 overflow-hidden"
-          }`}
-        >
-          <div className="flex flex-col items-center space-y-6 py-8">
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="mx-auto mt-2 max-w-5xl rounded-2xl border border-line bg-bg/95 p-2 backdrop-blur-xl md:hidden"
+          >
+            {items.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                onClick={() => setOpen(false)}
+                className="block rounded-xl px-4 py-3 text-fg hover:bg-white/[0.05]"
+              >
+                {label}
+              </a>
+            ))}
             <a
-              href="#home"
-              className="hover:text-gray-400"
-              onClick={() => setIsOpen(false)}
+              href={profile.resume}
+              download
+              className="mt-1 flex items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 font-medium text-bg"
             >
-              Home
+              Download resume <FiDownload aria-hidden />
             </a>
-            <a
-              href="#about"
-              className="hover:text-gray-400"
-              onClick={() => setIsOpen(false)}
-            >
-              About
-            </a>
-            <a
-              href="#skills"
-              className="hover:text-gray-400"
-              onClick={() => setIsOpen(false)}
-            >
-              Skills
-            </a>
-
-            <a
-              href="#Project"
-              className="hover:text-gray-400"
-              onClick={() => setIsOpen(false)}
-            >
-              Project
-            </a>
-            <a
-              href="#contact"
-              className="hover:text-gray-400"
-              onClick={() => setIsOpen(false)}
-            >
-              Contact
-            </a>
-          </div>
-        </div>
-      </div>
-    </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 };
 

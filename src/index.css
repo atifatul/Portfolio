@@ -1,6 +1,146 @@
 @import "tailwindcss";
-@plugin 'lightswind/plugin';
-html {
-  scroll-behavior: smooth;
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --color-bg: #070b14;
+  --color-surface: #0c1322;
+  --color-surface-2: #111a2c;
+  --color-line: rgb(148 163 184 / 0.14);
+  --color-fg: #e6edf6;
+  --color-muted: #94a3b8;
+  --color-accent: #34d399;
+  --color-accent-2: #22d3ee;
+  --color-danger: #f87171;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  background: var(--color-bg);
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-fg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgb(52 211 153 / 0.3);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dot-grid {
+  background-image: radial-gradient(rgb(148 163 184 / 0.2) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 75%);
+}
+
+.blob {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 9999px;
+  filter: blur(110px);
+  pointer-events: none;
+  animation: float 18s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.1); }
+}
+
+/* mouse ke saath chalne wali halki green roshni */
+.cursor-glow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+  background: radial-gradient(520px circle at var(--cx, 50%) var(--cy, 50%), rgb(52 211 153 / 0.07), transparent 70%);
+}
+
+/* card pe hover karne par border glow mouse ko follow karta hai */
+.spot-card {
+  position: relative;
+  isolation: isolate;
+}
+.spot-card::before,
+.spot-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.spot-card::before {
+  padding: 1px;
+  background: radial-gradient(380px circle at var(--mx, -999px) var(--my, -999px), rgb(52 211 153 / 0.6), transparent 45%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.spot-card::after {
+  z-index: -1;
+  background: radial-gradient(500px circle at var(--mx, -999px) var(--my, -999px), rgb(52 211 153 / 0.06), transparent 45%);
+}
+.spot-card:hover::before,
+.spot-card:hover::after {
+  opacity: 1;
+}
+
+.marquee {
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+  background: var(--color-accent);
+  animation: blink 1s steps(2, start) infinite;
+}
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

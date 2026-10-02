@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.13",
-    "lightswind": "^3.1.18",
     "motion": "^12.23.22",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-icons": "^5.7.0",
     "tailwindcss": "^4.1.13"
   },
   "devDependencies": {
