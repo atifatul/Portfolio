@@ -32,6 +32,16 @@ export const stats = {
 // hero mein "I build ..." ke baad yeh words badalte rehte hain
 export const buildWords = ["React apps", "full-stack web apps", "2D games for kids", "coding tasks for AI models"];
 
+// About mein "npm ls atif" terminal ki lines
+export const stackTree = [
+  ["react", "tailwind", "redux"],
+  ["node", "express"],
+  ["mongodb", "sql"],
+  ["python", "pytest"],
+  ["phaser"],
+  ["docker", "git"],
+];
+
 // bada scrolling text band
 export const bandWords = ["Software Developer", "AI Trainer", "React", "Python", "RLHF", "Phaser", "Node.js", "Code evals"];
 
@@ -141,6 +151,7 @@ export const projects = [
     image: notesImg,
     live: "https://notesapp-frontend-six.vercel.app/",
     code: "https://github.com/atifatul/Notesapp",
+    chips: ["JWT auth", "bcrypt", "REST API"],
   },
   {
     title: "Book Store",

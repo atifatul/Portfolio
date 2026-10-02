@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { animate, motion, useInView, useReducedMotion } from "motion/react";
 import { FiArrowUpRight, FiAward, FiClock, FiMapPin, FiUsers } from "react-icons/fi";
-import {
-  SiReact, SiJavascript, SiPython, SiNodedotjs, SiMongodb, SiTailwindcss, SiDocker, SiGit, SiTypescript, SiExpress,
-} from "react-icons/si";
 import photo from "../assets/atif.webp";
-import { about, profile, stats, links } from "../data";
+import { about, profile, stats, links, stackTree } from "../data";
 import { Reveal, Section, SectionHeading, SpotCard } from "./ui";
 
 function Counter({ value, suffix }) {
@@ -43,32 +40,43 @@ function DelhiTime() {
   return <span className="uppercase">{now}</span>;
 }
 
-const inner = [
-  [SiReact, "#61dafb"],
-  [SiJavascript, "#f7df1e"],
-  [SiPython, "#4b8bbe"],
-  [SiNodedotjs, "#5fa04e"],
-];
-const outer = [
-  [SiMongodb, "#47a248"],
-  [SiTailwindcss, "#38bdf8"],
-  [SiDocker, "#2496ed"],
-  [SiGit, "#f05032"],
-  [SiTypescript, "#3178c6"],
-  [SiExpress, "#e6edf6"],
-];
+// terminal jisme "npm ls atif" chalta hai aur stack tree ki tarah aata hai
+function StackTerminal() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const lines = [
+    { text: "atif@2026", cls: "text-muted" },
+    ...stackTree.map((pkgs, i) => ({
+      branch: i === stackTree.length - 1 ? "└── " : "├── ",
+      text: pkgs.join(", "),
+      cls: "text-slate-200",
+    })),
+    { text: "found 0 vulnerabilities", cls: "text-accent" },
+  ];
 
-function Ring({ icons, size, dur, reverse }) {
   return (
-    <div className={`orbit ${reverse ? "reverse" : ""}`} style={{ width: size, height: size, "--dur": dur }}>
-      {icons.map(([Icon, hex], i) => (
-        <span key={i} className="orbit-item" style={{ "--a": `${(360 / icons.length) * i}deg`, "--r": `${size / 2}px` }}>
-          <span className="-ml-5 -mt-5 h-10 w-10 items-center justify-center rounded-xl border border-line bg-surface-2 shadow-lg shadow-black/40">
-            <Icon style={{ color: hex }} className="h-5 w-5" aria-hidden />
-          </span>
-        </span>
-      ))}
-    </div>
+    <SpotCard className="h-full overflow-hidden rounded-3xl border border-line bg-[#060a12]">
+      <div className="flex items-center gap-1.5 border-b border-line px-4 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+        <span className="ml-2 font-mono text-[11px] text-muted">my stack</span>
+      </div>
+      <div ref={ref} className="p-5 font-mono text-[13px] leading-6">
+        <p>
+          <span className="text-accent">$</span> <span className="text-fg">npm ls atif</span>
+        </p>
+        <motion.div initial="hidden" animate={inView ? "show" : "hidden"} transition={{ staggerChildren: 0.12, delayChildren: 0.3 }}>
+          {lines.map((l, i) => (
+            <motion.p key={i} variants={{ hidden: { opacity: 0, x: -6 }, show: { opacity: 1, x: 0 } }} className="whitespace-pre">
+              {l.branch && <span className="text-slate-600">{l.branch}</span>}
+              <span className={l.cls}>{l.text}</span>
+            </motion.p>
+          ))}
+        </motion.div>
+        {inView && <span className="caret mt-1" aria-hidden />}
+      </div>
+    </SpotCard>
   );
 }
 
@@ -78,31 +86,66 @@ const label = "font-mono text-[11px] uppercase tracking-widest text-muted";
 const leetcode = links.find((l) => l.icon === "leetcode");
 const gfg = links.find((l) => l.icon === "gfg");
 
+function StatLink({ href, name, stat }) {
+  return (
+    <a href={href} target="_blank" rel="noreferrer" className="group block h-full">
+      <SpotCard className={`${tile} flex flex-col justify-between gap-6`}>
+        <p className={`${label} flex items-center justify-between`}>
+          {name}
+          <FiArrowUpRight
+            className="text-base transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent"
+            aria-hidden
+          />
+        </p>
+        <p className="font-display text-5xl font-bold text-fg">
+          <Counter value={stat.value} suffix={stat.suffix} />
+        </p>
+        <p className="text-sm text-muted">{stat.label}</p>
+      </SpotCard>
+    </a>
+  );
+}
+
 const About = () => (
   <Section id="about">
     <SectionHeading index="01" kicker="about" title="A bit about me" />
 
-    <div className="grid grid-flow-dense auto-rows-[minmax(170px,auto)] gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {/* photo */}
-      <Reveal className="lg:row-span-2">
-        <motion.div
-          whileHover={{ rotate: -1.2, scale: 1.01 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          className="relative h-full min-h-[340px] overflow-hidden rounded-3xl border border-line bg-surface"
-        >
-          <img src={photo} alt={profile.name} className="absolute inset-0 h-full w-full object-cover object-top" />
-          <div className="absolute inset-0 bg-linear-to-t from-bg via-bg/10 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-5">
-            <p className="font-display text-lg font-semibold">{profile.name}</p>
-            <p className="text-sm text-accent">{profile.role}</p>
-          </div>
-        </motion.div>
-      </Reveal>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* photo apne asli shape (4:5) mein, taaki kahin se na kate; neeche location */}
+      <div className="flex flex-col gap-4">
+        <Reveal>
+          <motion.div
+            whileHover={{ rotate: -1, scale: 1.015 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="relative overflow-hidden rounded-3xl border border-line bg-surface"
+          >
+            <img src={photo} alt={profile.name} width="492" height="632" className="block aspect-[492/632] w-full object-cover" />
+            <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-bg/95 via-bg/60 to-transparent p-5 pt-16">
+              <p className="font-display text-lg font-semibold">{profile.name}</p>
+              <p className="text-sm text-accent">{profile.role}</p>
+            </div>
+          </motion.div>
+        </Reveal>
+        <Reveal className="flex-1" delay={0.05}>
+          <SpotCard className={`${tile} relative flex flex-col justify-between gap-3 overflow-hidden`}>
+            <p className={label}>Based in</p>
+            <span className="absolute right-6 top-5 flex h-12 w-12 items-center justify-center" aria-hidden>
+              <span className="absolute h-full w-full animate-ping rounded-full border border-accent/40" />
+              <span className="absolute h-7 w-7 rounded-full bg-accent/15" />
+              <FiMapPin className="relative text-accent" />
+            </span>
+            <div>
+              <p className="font-display text-2xl font-semibold">Delhi NCR</p>
+              <p className="mt-1 text-sm text-muted">Remote, or on-site in Delhi NCR</p>
+            </div>
+          </SpotCard>
+        </Reveal>
+      </div>
 
       {/* intro */}
-      <Reveal className="md:col-span-2 lg:row-span-2" delay={0.05}>
+      <Reveal className="lg:col-span-2" delay={0.05}>
         <SpotCard className={`${tile} flex flex-col justify-center p-7 sm:p-9`}>
-          <p className="font-display text-xl font-semibold leading-snug text-fg sm:text-2xl lg:text-[1.7rem]">{about.paragraphs[0]}</p>
+          <p className="font-display text-xl font-semibold leading-snug text-fg sm:text-2xl lg:text-[1.65rem]">{about.paragraphs[0]}</p>
           {about.paragraphs.slice(1).map((p, i) => (
             <p key={i} className="mt-4 leading-relaxed text-muted">
               {p}
@@ -111,111 +154,62 @@ const About = () => (
         </SpotCard>
       </Reveal>
 
-      {/* right now */}
-      <Reveal delay={0.1}>
-        <SpotCard className={`${tile} flex flex-col justify-between`}>
-          <p className={`${label} flex items-center gap-2`}>
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-            </span>
-            Right now
-          </p>
-          <p className="mt-3 leading-snug text-fg">Training and evaluating AI models on Outlier, Alignerr and Chegg</p>
-          <p className="mt-4 flex items-center gap-2 font-mono text-sm text-accent-2">
-            <FiClock aria-hidden /> <DelhiTime /> in Delhi
-          </p>
-        </SpotCard>
-      </Reveal>
-
-      {/* hours */}
-      <Reveal delay={0.15}>
-        <SpotCard className={`${tile} flex flex-col justify-between bg-linear-to-br from-accent/[0.12] to-transparent`}>
-          <p className={label}>AI training</p>
-          <p className="text-shine font-display text-6xl font-bold">
-            <Counter value={stats.hours.value} suffix={stats.hours.suffix} />
-          </p>
-          <div>
-            <p className="text-sm text-fg">{stats.hours.label}</p>
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-accent">
-              <FiAward aria-hidden /> Promoted to reviewer on Outlier
+      {/* right now + hours */}
+      <div className="flex flex-col gap-4">
+        <Reveal className="flex-1" delay={0.1}>
+          <SpotCard className={`${tile} flex flex-col justify-between gap-4`}>
+            <p className={`${label} flex items-center gap-2`}>
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+              </span>
+              Right now
             </p>
-          </div>
-        </SpotCard>
-      </Reveal>
-
-      {/* leetcode */}
-      <Reveal>
-        <a href={leetcode.href} target="_blank" rel="noreferrer" className="group block h-full">
-          <SpotCard className={`${tile} flex flex-col justify-between`}>
-            <p className={`${label} flex items-center justify-between`}>
-              LeetCode <FiArrowUpRight className="text-base transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" aria-hidden />
+            <p className="leading-snug text-fg">Training and evaluating AI models on Outlier, Alignerr and Chegg</p>
+            <p className="flex items-center gap-2 font-mono text-sm text-accent-2">
+              <FiClock aria-hidden /> <DelhiTime /> in Delhi
             </p>
-            <p className="font-display text-5xl font-bold text-fg">
-              <Counter value={stats.leetcode.value} suffix={stats.leetcode.suffix} />
-            </p>
-            <p className="text-sm text-muted">{stats.leetcode.label}</p>
           </SpotCard>
-        </a>
-      </Reveal>
-
-      {/* gfg */}
-      <Reveal delay={0.05}>
-        <a href={gfg.href} target="_blank" rel="noreferrer" className="group block h-full">
-          <SpotCard className={`${tile} flex flex-col justify-between`}>
-            <p className={`${label} flex items-center justify-between`}>
-              GeeksforGeeks <FiArrowUpRight className="text-base transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" aria-hidden />
+        </Reveal>
+        <Reveal className="flex-1" delay={0.15}>
+          <SpotCard className={`${tile} flex flex-col justify-between gap-4 bg-linear-to-br from-accent/[0.12] to-transparent`}>
+            <p className={label}>AI training</p>
+            <p className="text-shine font-display text-6xl font-bold">
+              <Counter value={stats.hours.value} suffix={stats.hours.suffix} />
             </p>
-            <p className="font-display text-5xl font-bold text-fg">
-              <Counter value={stats.gfg.value} suffix={stats.gfg.suffix} />
-            </p>
-            <p className="text-sm text-muted">{stats.gfg.label}</p>
-          </SpotCard>
-        </a>
-      </Reveal>
-
-      {/* stack orbit */}
-      <Reveal className="md:col-span-2 lg:row-span-2" delay={0.1}>
-        <SpotCard className={`${tile} relative min-h-[360px] overflow-hidden`}>
-          <p className={label}>My stack</p>
-          <div className="absolute inset-0 top-6 flex items-center justify-center">
-            <div className="relative h-[300px] w-[300px]">
-              <Ring icons={outer} size={280} dur="46s" />
-              <Ring icons={inner} size={150} dur="30s" reverse />
-              <div className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent/40 bg-accent/10 font-display text-xl font-bold text-accent shadow-[0_0_40px_rgb(52_211_153/0.35)]">
-                {"</>"}
-              </div>
+            <div>
+              <p className="text-sm text-fg">{stats.hours.label}</p>
+              <p className="mt-1 flex items-center gap-1.5 text-xs text-accent">
+                <FiAward aria-hidden /> Promoted to reviewer on Outlier
+              </p>
             </div>
-          </div>
-        </SpotCard>
-      </Reveal>
+          </SpotCard>
+        </Reveal>
+      </div>
 
-      {/* location */}
       <Reveal>
-        <SpotCard className={`${tile} relative flex flex-col justify-between overflow-hidden`}>
-          <p className={label}>Based in</p>
-          <span className="absolute right-6 top-6 flex h-14 w-14 items-center justify-center" aria-hidden>
-            <span className="absolute h-full w-full animate-ping rounded-full border border-accent/40" />
-            <span className="absolute h-8 w-8 rounded-full bg-accent/15" />
-            <FiMapPin className="relative text-accent" />
-          </span>
-          <p className="font-display text-2xl font-semibold">Delhi NCR</p>
-          <p className="text-sm text-muted">Remote, or on-site in Delhi NCR</p>
-        </SpotCard>
+        <StatLink href={leetcode.href} name="LeetCode" stat={stats.leetcode} />
       </Reveal>
-
-      {/* college */}
       <Reveal delay={0.05}>
-        <SpotCard className={`${tile} flex flex-col justify-between`}>
+        <StatLink href={gfg.href} name="GeeksforGeeks" stat={stats.gfg} />
+      </Reveal>
+      <Reveal delay={0.1}>
+        <SpotCard className={`${tile} flex flex-col gap-4`}>
           <p className={`${label} flex items-center gap-2`}>
             <FiUsers aria-hidden /> In college
           </p>
-          <ul className="mt-3 space-y-1.5 text-sm text-slate-300">
+          <ul className="space-y-2 text-sm text-slate-300">
             {about.college.map((c) => (
-              <li key={c}>{c}</li>
+              <li key={c} className="flex gap-2.5">
+                <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
+                {c}
+              </li>
             ))}
           </ul>
         </SpotCard>
+      </Reveal>
+      <Reveal className="md:col-span-2 lg:col-span-1" delay={0.15}>
+        <StackTerminal />
       </Reveal>
     </div>
   </Section>
